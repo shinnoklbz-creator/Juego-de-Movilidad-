@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Misión Aventura Motriz - Educación Física Divertida</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Contenedor Principal de la App -->
+  <div id="app" class="game-container">
+    
+    <!-- Barra Superior de Navegación / Estado -->
+    <header id="top-bar" class="top-bar">
+      <div class="top-bar-left">
+        <button id="btn-home" class="icon-btn" title="Ir al Menú Principal">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+          </svg>
+        </button>
+        <button id="btn-map" class="icon-btn hidden" title="Ver Mapa de Islas">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+            <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/>
+          </svg>
+          <span class="btn-text">Mapa</span>
+        </button>
+      </div>
+
+      <div class="top-bar-center">
+        <div class="stat-pill score-pill" title="Puntos ganados">
+          <span class="stat-icon">⭐</span>
+          <span id="score-display">0</span>
+        </div>
+        <div class="stat-pill time-pill" title="Tiempo de ejercicio acumulado">
+          <span class="stat-icon">⏱️</span>
+          <span id="total-time-display">00:00</span>
+        </div>
+      </div>
+
+      <div class="top-bar-right">
+        <button id="btn-camera-toggle" class="icon-btn camera-badge-btn" title="Activar/Desactivar Cámara Interactiva">
+          <span class="camera-icon">📷</span>
+          <span class="btn-text">Cámara</span>
+        </button>
+        <button id="btn-sound" class="icon-btn" title="Activar/Silenciar Sonido">
+          <span id="sound-icon">🔊</span>
+        </button>
+        <button id="btn-fullscreen" class="icon-btn" title="Pantalla Completa (Ideal Pizarra Digital)">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+          </svg>
+        </button>
+        <button id="btn-teacher-panel-toggle" class="icon-btn teacher-badge-btn" title="Panel del Docente">
+          <span class="teacher-icon">👨‍🏫</span>
+          <span class="btn-text">Docente</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ÁREA DE PANTALLAS DEL JUEGO -->
+    <main id="screens-container" class="screens-container">
+
+      <!-- PANTALLA 1: BIENVENIDA Y MENÚ PRINCIPAL -->
+      <section id="screen-welcome" class="game-screen active">
+        <div class="hero-content">
+          <div class="character-mascot hero-mascot">
+            <div id="hero-character-svg" class="character-preview-container"></div>
+          </div>
+          <div class="hero-text">
+            <span class="badge-tag">¡Ponte de pie y prepárate a jugar!</span>
+            <h1 class="main-title">Misión Aventura <span class="highlight">Motriz</span></h1>
+            <p class="subtitle">Explora 5 islas misteriosas superando retos de fuerza, equilibrio y agilidad con tu cuerpo frente a la pantalla.</p>
+          </div>
+        </div>
+
+        <!-- Selector de Dificultad -->
+        <div class="difficulty-picker-card">
+          <h2 class="section-title">Elige el Nivel de Energía:</h2>
+          <div class="difficulty-options">
+            <button class="diff-btn" data-diff="facil">
+              <span class="diff-emoji">🌱</span>
+              <span class="diff-name">Fácil</span>
+              <span class="diff-desc">15-20 seg | 3.er Grado</span>
+            </button>
+            <button class="diff-btn active" data-diff="medio">
+              <span class="diff-emoji">⚡</span>
+              <span class="diff-name">Medio</span>
+              <span class="diff-desc">25-30 seg | 4.º Grado</span>
+            </button>
+            <button class="diff-btn" data-diff="dificil">
+              <span class="diff-emoji">🔥</span>
+              <span class="diff-name">Difícil</span>
+              <span class="diff-desc">40-45 seg | 5.º Grado</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Opciones de Modo de Juego -->
+        <div class="mode-selection-row">
+          <button id="btn-start-adventure" class="action-btn btn-primary pulse-action">
+            <span class="btn-emoji">🚀</span> ¡COMENZAR AVENTURA!
+          </button>
+          <button id="btn-welcome-camera" class="action-btn btn-camera-welcome">
+            <span class="btn-emoji">📷</span> Jugar con Cámara (IA)
+          </button>
+          <button id="btn-group-mode" class="action-btn btn-secondary">
+            <span class="btn-emoji">👥</span> Modo Clase / Proyector
+          </button>
+        </div>
+      </section>
+
+      <!-- PANTALLA 2: SEGURIDAD Y ESPACIO PERSONAL -->
+      <section id="screen-safety" class="game-screen">
+        <div class="modal-dialog safety-card">
+          <div class="safety-icon-header">
+            <div class="warning-circle">⚠️</div>
+          </div>
+          <h2 class="safety-title">¡Espacio Seguro de Juego!</h2>
+          <p class="safety-desc">Antes de iniciar, activa tu zona de explorador:</p>
+          
+          <div class="safety-checklist">
+            <div class="safety-item">
+              <span class="check-icon">👟</span>
+              <div>
+                <strong>Piso Despejado</strong>
+                <p>Aparta mochilas, sillas y juguetes. Verifica no resbalar.</p>
+              </div>
+            </div>
+            <div class="safety-item">
+              <span class="check-icon">📏</span>
+              <div>
+                <strong>Espacio Personal (Burbuja)</strong>
+                <p>Extiende tus brazos a los lados. Si no tocas nada, ¡estás listo!</p>
+              </div>
+            </div>
+            <div class="safety-item">
+              <span class="check-icon">💧</span>
+              <div>
+                <strong>Hidratación y Escucha a tu Cuerpo</strong>
+                <p>Ten agua cerca. Si sientes cansancio extremo, respira y descansa.</p>
+              </div>
+            </div>
+          </div>
+
+          <button id="btn-safety-confirm" class="action-btn btn-success">
+            <span class="btn-emoji">✅</span> ¡Mi espacio está listo!
+          </button>
+        </div>
+      </section>
+
+      <!-- PANTALLA 3: CALENTAMIENTO INICIAL -->
+      <section id="screen-warmup" class="game-screen">
+        <div class="warmup-container">
+          <div class="phase-header">
+            <span class="pill-badge warm-badge">Fase 1: Preparación</span>
+            <h2>Calentamiento Activo de los Animales</h2>
+            <p>Despierta tus músculos y articulaciones para evitar lesiones.</p>
+          </div>
+
+          <div class="warmup-card">
+            <div id="warmup-avatar-slot" class="warmup-avatar-slot"></div>
+            <div class="warmup-instructions">
+              <h3 id="warmup-step-title">1. Giros Suaves de Hombros</h3>
+              <p id="warmup-step-desc">Mueve los hombros en círculos hacia atrás, como remando en una barca.</p>
+              <div class="timer-box">
+                <span class="timer-digit" id="warmup-countdown">15</span>
+                <span class="timer-unit">segundos</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="warmup-controls">
+            <button id="btn-warmup-next" class="action-btn btn-primary">
+              Siguiente Ejercicio ➡️
+            </button>
+            <button id="btn-warmup-skip" class="text-link-btn">
+              Saltar al Mapa de Islas ⏭️
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANTALLA 4: MAPA DE LAS 5 ISLAS -->
+      <section id="screen-map" class="game-screen">
+        <div class="map-header">
+          <div class="map-titles">
+            <h2>Archipiélago del Movimiento</h2>
+            <p>Completa los retos de cada isla para desbloquear el tesoro final.</p>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-info">
+              <span>Progreso Total:</span>
+              <span id="map-progress-pct">0%</span>
+            </div>
+            <div class="progress-track">
+              <div id="map-progress-fill" class="progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-interactive-viewport">
+          <div id="islands-grid" class="islands-grid">
+            <!-- Isla 1 -->
+            <div class="island-card current" data-island-id="1">
+              <div class="island-status-badge">Nivel 1</div>
+              <div class="island-icon-wrapper">
+                <span class="island-emoji">🦩</span>
+              </div>
+              <h3 class="island-name">Selva del Equilibrio</h3>
+              <p class="island-sub">Flamenco y Caminata Fina</p>
+              <div class="island-stars" id="island-stars-1">⭐⭐⭐</div>
+              <button class="island-enter-btn" data-island="1">¡Explorar Isla!</button>
+            </div>
+
+            <!-- Isla 2 -->
+            <div class="island-card locked" data-island-id="2">
+              <div class="island-status-badge">Nivel 2</div>
+              <div class="island-icon-wrapper">
+                <span class="island-emoji">🌋</span>
+              </div>
+              <h3 class="island-name">Volcán de la Fuerza</h3>
+              <p class="island-sub">Sentadillas y Puente Fuerte</p>
+              <div class="island-stars" id="island-stars-2">☆☆☆</div>
+              <button class="island-enter-btn" data-island="2" disabled>Bloqueado 🔒</button>
+            </div>
+
+            <!-- Isla 3 -->
+            <div class="island-card locked" data-island-id="3">
+              <div class="island-status-badge">Nivel 3</div>
+              <div class="island-icon-wrapper">
+                <span class="island-emoji">⭐</span>
+              </div>
+              <h3 class="island-name">Cañón de la Coordinación</h3>
+              <p class="island-sub">Saltos de Tijera y Cuerda</p>
+              <div class="island-stars" id="island-stars-3">☆☆☆</div>
+              <button class="island-enter-btn" data-island="3" disabled>Bloqueado 🔒</button>
+            </div>
+
+            <!-- Isla 4 -->
+            <div class="island-card locked" data-island-id="4">
+              <div class="island-status-badge">Nivel 4</div>
+              <div class="island-icon-wrapper">
+                <span class="island-emoji">⚡</span>
+              </div>
+              <h3 class="island-name">Río de la Agilidad</h3>
+              <p class="island-sub">Carrera Rápida y Cangrejo</p>
+              <div class="island-stars" id="island-stars-4">☆☆☆</div>
+              <button class="island-enter-btn" data-island="4" disabled>Bloqueado 🔒</button>
+            </div>
+
+            <!-- Isla 5 -->
+            <div class="island-card locked" data-island-id="5">
+              <div class="island-status-badge">Nivel 5</div>
+              <div class="island-icon-wrapper">
+                <span class="island-emoji">🥋</span>
+              </div>
+              <h3 class="island-name">Cima de Cruce Ninja</h3>
+              <p class="island-sub">Codo con Rodilla y Gran Simón</p>
+              <div class="island-stars" id="island-stars-5">☆☆☆</div>
+              <button class="island-enter-btn" data-island="5" disabled>Bloqueado 🔒</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANTALLA 5: RETO FÍSICO EN VIVO -->
+      <section id="screen-challenge" class="game-screen">
+        <div class="challenge-layout">
+          <!-- Cabecera del Reto -->
+          <div class="challenge-header">
+            <div class="challenge-meta">
+              <span id="challenge-island-tag" class="island-tag">Isla 1: Equilibrio</span>
+              <span id="challenge-number-tag" class="challenge-tag">Reto 1 de 2</span>
+            </div>
+            <h2 id="challenge-title" class="challenge-title">El Flamenco Dorado</h2>
+            <p id="challenge-cue" class="challenge-cue">¡Párate sobre tu pie derecho con los brazos abiertos como alas!</p>
+          </div>
+
+          <!-- Escenario Central con Personaje Animado -->
+          <div class="challenge-stage">
+            <div class="character-anim-box">
+              <div id="character-figure" class="animated-character-svg-wrapper">
+                <!-- SVG Dinámico del explorador en movimiento -->
+              </div>
+              <div class="ground-shadow"></div>
+            </div>
+
+            <!-- Panel de Video con Detección de Postura (Solo cuando la cámara está activa) -->
+            <div id="camera-feed-container" class="camera-feed-box hidden">
+              <div class="camera-media-holder">
+                <video id="camera-video" playsinline muted autoplay></video>
+                <canvas id="camera-canvas"></canvas>
+                <div class="camera-live-pill">
+                  <span class="live-dot">●</span> <span>CÁMARA ACTIVA</span>
+                </div>
+                <button id="btn-camera-stage-close" class="camera-stage-close-btn" title="Desactivar cámara">✖</button>
+              </div>
+              <div class="camera-stage-status">
+                <span id="camera-cue-text" class="camera-cue-badge">¡Párate a 2 metros!</span>
+                <span id="camera-counter-badge" class="camera-count-badge">Reps: 0 / 8</span>
+              </div>
+            </div>
+
+            <!-- Panel de Métrica y Ritmo -->
+            <div class="metric-and-rhythm-panel">
+              <div class="big-metric-display">
+                <span id="metric-label" class="metric-label">TIEMPO RESTANTE</span>
+                <div class="metric-number-wrapper">
+                  <span id="metric-value" class="metric-number">25</span>
+                  <span id="metric-unit" class="metric-unit">s</span>
+                </div>
+              </div>
+
+              <!-- Indicador de Ritmo / Latido para marcar repeticiones o cadencia -->
+              <div id="rhythm-pulse-dot" class="rhythm-indicator pulse-active" title="Marca el ritmo del ejercicio">
+                <span id="rhythm-text">¡Mantén el equilibrio!</span>
+              </div>
+
+              <div class="exercise-progress-bar">
+                <div id="exercise-bar-fill" class="exercise-bar-fill"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Retroalimentación Positiva en vivo -->
+          <div id="live-feedback-bubble" class="feedback-toast">
+            <span class="feedback-emoji">✨</span>
+            <span id="feedback-message">¡Increíble postura! ¡Sigue así!</span>
+          </div>
+
+          <!-- Controles de Reto (Grandes, accesibles a distancia) -->
+          <div class="challenge-controls">
+            <button id="btn-pause-challenge" class="control-btn btn-outline" title="Pausar reto">
+              ⏸️ Pausar
+            </button>
+            <button id="btn-complete-challenge" class="control-btn btn-action-done">
+              <span class="check-hero">💪</span>
+              <span class="done-text">¡LISTO! (Completado)</span>
+            </button>
+            <button id="btn-restart-challenge" class="control-btn btn-outline" title="Repetir reto">
+              🔄 Repetir
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANTALLA 6: MINI-RETO ESPECIAL "SIMÓN DICE" -->
+      <section id="screen-simon" class="game-screen">
+        <div class="simon-game-container">
+          <div class="simon-header">
+            <span class="pill-badge simon-badge">Mini-Reto Especial de Fin de Isla</span>
+            <h2>¡Simón Dice con Movimientos!</h2>
+            <p>Atención: Si dice <strong>"Simón dice..."</strong>, ¡haz el movimiento físico! Si NO lo dice, ¡QUÉDATE COMO ESTATUA!</p>
+          </div>
+
+          <div class="simon-main-card">
+            <div id="simon-status-tag" class="simon-command-bubble">
+              <span id="simon-command-text">¡Prepárate frente a la pantalla!</span>
+            </div>
+
+            <div class="simon-avatar-display" id="simon-avatar-box">
+              <!-- Avatar demostrando acción o congelado -->
+            </div>
+
+            <div class="simon-timer-circle">
+              <span id="simon-countdown">5</span>
+            </div>
+
+            <div class="simon-actions-verification">
+              <p class="simon-help">¿Tú o la clase lo lograron correctamente?</p>
+              <div class="simon-choice-buttons">
+                <button id="btn-simon-success" class="action-btn btn-success">
+                  🎉 ¡Lo hicimos bien! (+100 pts)
+                </button>
+                <button id="btn-simon-miss" class="action-btn btn-secondary">
+                  😅 ¡Casi! Intentemos el siguiente
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="simon-score-bar">
+            <span>Ronda <span id="simon-round">1</span> de 4</span>
+            <span>Aciertos: <span id="simon-hits">0</span></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANTALLA 7: PAUSA ACTIVA DE RESPIRACIÓN Y RECUPERACIÓN -->
+      <section id="screen-breathing" class="game-screen">
+        <div class="breathing-card">
+          <div class="breathing-header">
+            <span class="pill-badge breath-badge">Pausa de Oxigenación</span>
+            <h2>Respira con el Globo Mágico</h2>
+            <p>Inhala profundo por la nariz y exhala lentamente por la boca.</p>
+          </div>
+
+          <div class="breathing-stage">
+            <div id="breathing-orb" class="breathing-orb inhale">
+              <span id="breathing-instruction">Inhala...</span>
+            </div>
+          </div>
+
+          <div class="breath-timer-info">
+            <p id="breath-countdown-desc">Tiempo de recuperación: <span id="breath-seconds">20</span>s</p>
+          </div>
+
+          <button id="btn-finish-breath" class="action-btn btn-primary">
+            ¡Estoy listo para continuar! ➡️
+          </button>
+        </div>
+      </section>
+
+      <!-- PANTALLA 8: ESTIRAMIENTO Y VUELTA A LA CALMA -->
+      <section id="screen-cooldown" class="game-screen">
+        <div class="warmup-container">
+          <div class="phase-header">
+            <span class="pill-badge cooldown-badge">Fase Final: Vuelta a la Calma</span>
+            <h2>Estiramiento del Explorador</h2>
+            <p>Relaja tus músculos y agradece a tu cuerpo por el esfuerzo.</p>
+          </div>
+
+          <div class="warmup-card">
+            <div id="cooldown-avatar-slot" class="warmup-avatar-slot"></div>
+            <div class="warmup-instructions">
+              <h3 id="cooldown-step-title">1. Tocar el Cielo</h3>
+              <p id="cooldown-step-desc">Estira ambos brazos hacia arriba muy alto, como si quisieras tocar las nubes.</p>
+              <div class="timer-box">
+                <span class="timer-digit" id="cooldown-countdown">15</span>
+                <span class="timer-unit">segundos</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="warmup-controls">
+            <button id="btn-cooldown-next" class="action-btn btn-primary">
+              Siguiente Estiramiento ➡️
+            </button>
+            <button id="btn-cooldown-finish" class="action-btn btn-success">
+              Ver Trofeo y Resultados 🏆
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANTALLA 9: VICTORIA Y DIPLOMA FINAL -->
+      <section id="screen-victory" class="game-screen">
+        <div class="victory-card">
+          <div class="confetti-holder">🎉</div>
+          <div class="victory-trophy-icon">🏆</div>
+          <h1 class="victory-title">¡Misión Aventura Cumplida!</h1>
+          <p class="victory-subtitle">¡Has activado tu cuerpo, tu agilidad y tu salud motriz!</p>
+
+          <div class="victory-stats-grid">
+            <div class="stat-box">
+              <span class="stat-big-icon">⭐</span>
+              <strong id="final-score-val">1200</strong>
+              <small>Puntos Ganados</small>
+            </div>
+            <div class="stat-box">
+              <span class="stat-big-icon">⏱️</span>
+              <strong id="final-time-val">18:30</strong>
+              <small>Minutos Activos</small>
+            </div>
+            <div class="stat-box">
+              <span class="stat-big-icon">🏝️</span>
+              <strong id="final-islands-val">5 / 5</strong>
+              <small>Islas Conquistadas</small>
+            </div>
+            <div class="stat-box">
+              <span class="stat-big-icon">🌟</span>
+              <strong id="final-stars-val">15</strong>
+              <small>Estrellas Totales</small>
+            </div>
+          </div>
+
+          <!-- Diploma Virtual para el Estudiante o Grupo -->
+          <div class="diploma-preview">
+            <div class="diploma-border">
+              <span class="diploma-tag">CERTIFICADO OFICIAL DE DESTREZA MOTRIZ</span>
+              <h3>Explorador de Oro de Educación Física</h3>
+              <p>Otorgado a: <strong id="diploma-student-name">Toda la Clase de Exploradores</strong></p>
+              <p class="diploma-text">Por demostrar excelencia en equilibrio, fuerza, agilidad y coordinación física.</p>
+            </div>
+          </div>
+
+          <div class="victory-actions">
+            <button id="btn-print-diploma" class="action-btn btn-outline" onclick="window.print()">
+              🖨️ Imprimir Diploma
+            </button>
+            <button id="btn-replay-all" class="action-btn btn-primary">
+              🔄 Jugar Otra Aventura
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- MODAL: PANEL DEL DOCENTE -->
+    <div id="teacher-modal" class="modal-overlay hidden">
+      <div class="modal-dialog teacher-dialog">
+        <div class="modal-header">
+          <div class="header-title-wrap">
+            <span class="teacher-avatar-icon">📋</span>
+            <div>
+              <h3>Panel de Control Docente</h3>
+              <p class="text-muted">Herramientas pedagógicas y monitoreo en vivo</p>
+            </div>
+          </div>
+          <button id="btn-close-teacher" class="close-modal-btn" title="Cerrar panel">✖</button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Estadísticas Rápidas -->
+          <div class="teacher-stats-row">
+            <div class="t-stat-card">
+              <span class="t-stat-num" id="t-time-active">00:00</span>
+              <span class="t-stat-label">Tiempo Total en Movimiento</span>
+            </div>
+            <div class="t-stat-card">
+              <span class="t-stat-num" id="t-challenges-done">0 / 12</span>
+              <span class="t-stat-label">Retos Superados</span>
+            </div>
+            <div class="t-stat-card">
+              <span class="t-stat-num" id="t-calories-approx">0 kcal</span>
+              <span class="t-stat-label">Gasto Energético Estimado</span>
+            </div>
+          </div>
+
+          <!-- Control de Modo Grupal / Individual -->
+          <div class="teacher-control-section">
+            <h4>Modo de Sesión</h4>
+            <div class="toggle-group">
+              <button id="btn-toggle-mode-class" class="toggle-pill active">
+                🏫 Modo Aula / Grupo (Proyección)
+              </button>
+              <button id="btn-toggle-mode-solo" class="toggle-pill">
+                🧒 Modo Individual (Tablet / PC)
+              </button>
+            </div>
+          </div>
+
+          <!-- Ajuste Rápido de Dificultad para el Grupo -->
+          <div class="teacher-control-section">
+            <h4>Ajuste de Dificultad Dinámica</h4>
+            <div class="difficulty-options">
+              <button class="diff-btn-t" data-diff="facil">🌱 Fácil (3.º Grado)</button>
+              <button class="diff-btn-t active" data-diff="medio">⚡ Medio (4.º Grado)</button>
+              <button class="diff-btn-t" data-diff="dificil">🔥 Difícil (5.º Grado)</button>
+            </div>
+          </div>
+
+          <!-- Salto Directo a Islas / Retos -->
+          <div class="teacher-control-section">
+            <h4>Acceso Rápido a Contenidos (Salto de Nivel)</h4>
+            <div class="teacher-jump-grid">
+              <button class="t-jump-btn" data-target-island="1">🏝️ 1. Equilibrio</button>
+              <button class="t-jump-btn" data-target-island="2">🌋 2. Fuerza</button>
+              <button class="t-jump-btn" data-target-island="3">⭐ 3. Coordinación</button>
+              <button class="t-jump-btn" data-target-island="4">⚡ 4. Agilidad</button>
+              <button class="t-jump-btn" data-target-island="5">🥋 5. Lateralidad / Cruzada</button>
+              <button class="t-jump-btn" id="t-btn-cooldown">🧘 Estiramiento Final</button>
+            </div>
+          </div>
+
+          <!-- Herramientas de Gestión -->
+          <div class="teacher-control-section actions-row">
+            <button id="btn-teacher-reset" class="action-btn btn-danger-soft">
+              🗑️ Reiniciar Todo el Progreso
+            </button>
+            <button id="btn-teacher-voice-toggle" class="action-btn btn-outline">
+              🗣️ Voz de Guía (Lectura): <strong id="voice-status-label">Activada</strong>
+            </button>
+          </div>
+        </div>
+      </div>
+    <!-- MODAL: GUÍA DE POSICIÓN PARA MODO CÁMARA -->
+    <div id="camera-guide-modal" class="modal-overlay hidden">
+      <div class="modal-dialog camera-guide-dialog">
+        <div class="modal-header">
+          <div class="header-title-wrap">
+            <span class="teacher-avatar-icon">📷</span>
+            <div>
+              <h3>¡Modo Cámara con Detección!</h3>
+              <p class="text-muted">Juega de pie mientras el juego cuenta tus movimientos</p>
+            </div>
+          </div>
+          <button id="btn-close-camera-guide" class="close-modal-btn" title="Cerrar ventana">✖</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="camera-steps-grid">
+            <div class="c-step-card">
+              <span class="c-step-icon">📏</span>
+              <h4>1. Distancia de 2 Metros</h4>
+              <p>Da unos 3 pasos hacia atrás para que la cámara vea tu cuerpo completo (de cabeza a pies).</p>
+            </div>
+            <div class="c-step-card">
+              <span class="c-step-icon">💡</span>
+              <h4>2. Espacio y Luz</h4>
+              <p>Ilumina bien tu área y no tengas ventanas brillantes justo detrás de ti.</p>
+            </div>
+            <div class="c-step-card">
+              <span class="c-step-icon">🤖</span>
+              <h4>3. Muñequito Divertido</h4>
+              <p>¡Verás tus movimientos convertidos en un avatar animado que cuenta tus repeticiones!</p>
+            </div>
+          </div>
+
+          <div class="camera-privacy-alert">
+            🔒 <strong>100% Seguro y Privado:</strong> Todo el procesamiento se realiza en tu navegador. No se guarda, graba ni envía ninguna foto o video a internet.
+          </div>
+
+          <div class="camera-guide-actions">
+            <button id="btn-start-camera-confirmed" class="action-btn btn-primary pulse-action">
+              🚀 ¡Activar Cámara y Comenzar!
+            </button>
+            <button id="btn-cancel-camera" class="action-btn btn-outline">
+              Seguir en Modo Manual (Sin Cámara)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUDIO SINTETIZADO (Web Audio API en JS) -->
+  </div>
+
+  <script src="camera.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
